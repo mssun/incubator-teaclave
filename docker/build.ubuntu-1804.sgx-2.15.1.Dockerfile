@@ -17,9 +17,9 @@
 
 FROM ubuntu:18.04
 
-ENV VERSION 2.14.100.2-bionic1
-ENV SGX_DOWNLOAD_URL_BASE "https://download.01.org/intel-sgx/sgx-linux/2.14/distro/ubuntu18.04-server"
-ENV SGX_LINUX_X64_SDK sgx_linux_x64_sdk_2.14.100.2.bin
+ENV VERSION 2.15.101.1-bionic1
+ENV SGX_DOWNLOAD_URL_BASE "https://download.01.org/intel-sgx/sgx-linux/2.15.1/distro/ubuntu18.04-server/"
+ENV SGX_LINUX_X64_SDK sgx_linux_x64_sdk_2.15.101.1.bin
 ENV SGX_LINUX_X64_SDK_URL "$SGX_DOWNLOAD_URL_BASE/$SGX_LINUX_X64_SDK"
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -96,6 +96,10 @@ RUN apt-get update && apt-get install -q -y \
     llvm \
     curl \
     python3-pip
+
+RUN apt-get update && apt-get install -q -y \
+    libjpeg-dev \
+    zlib1g-dev
 
 RUN pip3 install pyopenssl toml cryptography yapf requests Pillow
 
