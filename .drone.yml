@@ -13,6 +13,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# common anchors
+x-isgx-volumes: &isgx-volumes
+  volumes:
+  - name: isgx
+    host:
+      path: /dev/isgx
+  - name: aesmd
+    host:
+      path: /var/run/aesmd/aesm.socket
+
+x-isgx-pipeline-volumes: &isgx-pipeline-volumes
+  volumes:
+  - name: isgx
+    path: /dev/isgx
+  - name: aesmd
+    path: /var/run/aesmd/aesm.socket
+
 kind: pipeline
 name: sgx-debug-ubuntu-1804
 
@@ -52,11 +69,7 @@ steps:
     AS_SPID:
       from_secret: V5_SPID
   privileged: true
-  volumes:
-  - name: isgx
-    path: /dev/isgx
-  - name: aesmd
-    path: /var/run/aesmd/aesm.socket
+  <<: *isgx-pipeline-volumes
   commands:
   - . /root/.cargo/env
   - . /opt/sgxsdk/environment
@@ -64,13 +77,7 @@ steps:
   - (cd release/tool && ./teaclave_sgx_tool attestation --key $AS_KEY --spid $AS_SPID)
   - cd build && make run-tests
 
-volumes:
-- name: isgx
-  host:
-    path: /dev/isgx
-- name: aesmd
-  host:
-    path: /var/run/aesmd/aesm.socket
+<<: *isgx-volumes
 
 node:
   instance: mesatee-sgx
